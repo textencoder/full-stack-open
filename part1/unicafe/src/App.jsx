@@ -37,13 +37,13 @@ export default App
 
 function Feedback(props) {
   function handleClick(event) {
-    console.log(event)
-    if (event.target.value == "good") {
+    console.log(event);
+    if (event.target.textContent == "good") {
       props.setGood(props.good + 1);
       props.setAverage(props.average + 1);
-    } else if (event.target.value == "neutral") {
+    } else if (event.target.textContent == "neutral") {
       props.setNeutral(props.neutral + 1);
-    } else if (event.target.value == "bad") {
+    } else if (event.target.textContent == "bad") {
       props.setBad(props.bad + 1);
       props.setAverage(props.average - 1);
     }
@@ -54,9 +54,9 @@ function Feedback(props) {
   return (
     <>
     <h1>give feedback</h1>
-    <button value="good" onClick={handleClick}>good</button>
-    <button value="neutral" onClick={handleClick}>neutral</button>
-    <button value="bad" onClick={handleClick}>bad</button>
+    <Button text="good" handleClick={handleClick}/>
+    <Button text="neutral" handleClick={handleClick}/>
+    <Button text="bad" handleClick={handleClick}/>
     </>
   )
 }
@@ -73,12 +73,24 @@ function Stats(props) {
   return (
     <>
     <h1>statistics</h1>
-    <p>good {props.good}</p>
-    <p>neutral {props.neutral}</p>
-    <p>bad {props.bad}</p>
-    <p>all {props.all}</p>
-    <p>average {props.average / props.all}</p>
-    <p>positive {(props.good / props.all) * 100}%</p>
+    <StatisticLine text="good" value={props.good}/>
+    <StatisticLine text="neutral" value={props.neutral}/>
+    <StatisticLine text="bad" value={props.bad}/>
+    <StatisticLine text="all" value={props.all}/>
+    <StatisticLine text="average" value={props.average / props.all}/>
+    <StatisticLine text="positive" value={(props.good / props.all) * 100} symbol="%"/>
     </>
+  )
+}
+
+function Button(props) {
+  return (
+    <button onClick={props.handleClick}>{props.text}</button>
+  )
+}
+
+function StatisticLine(props) {
+  return (
+    <p>{props.text} {props.value}{props.symbol}</p>
   )
 }
