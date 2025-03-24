@@ -73,12 +73,16 @@ function Stats(props) {
   return (
     <>
     <h1>statistics</h1>
+    <table>
+      <tbody>
     <StatisticLine text="good" value={props.good}/>
     <StatisticLine text="neutral" value={props.neutral}/>
     <StatisticLine text="bad" value={props.bad}/>
     <StatisticLine text="all" value={props.all}/>
     <StatisticLine text="average" value={props.average / props.all}/>
     <StatisticLine text="positive" value={(props.good / props.all) * 100} symbol="%"/>
+    </tbody>
+    </table>
     </>
   )
 }
@@ -91,6 +95,9 @@ function Button(props) {
 
 function StatisticLine(props) {
   return (
-    <p>{props.text} {props.value}{props.symbol}</p>
+    <tr>
+    <td>{props.text}</td> 
+    <td>{props.value}{props.symbol}</td>
+    </tr>
   )
 }
