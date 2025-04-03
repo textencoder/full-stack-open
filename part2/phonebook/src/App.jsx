@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import personService from './services/persons';
+import personService from "./services/persons";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -8,12 +8,11 @@ const App = () => {
   const [filter, setFilter] = useState("");
 
   useEffect(() => {
-    personService.getAll('http://localhost:3001/persons')
-    .then(response => {
+    personService.getAll("http://localhost:3001/persons").then((response) => {
       //console.log(response.data)
       setPersons(response.data);
-    })
-  }, [persons])
+    });
+  }, [persons]);
 
   function handleNameChange(event) {
     //console.log(event.target.value)
@@ -41,20 +40,18 @@ const App = () => {
       return;
     }
 
-    const personObject = { 
-      name: newName, 
-      number: newNumber, 
-      id: persons.length + 1
-      }
+    const personObject = {
+      name: newName,
+      number: newNumber,
+      id: String(persons.length + 1),
+    };
 
-    personService
-    .create(personObject)
-    .then(response => {
+    personService.create(personObject).then((response) => {
       console.log(response);
-      setPersons(persons.concat(response.data))
-      setNewName('')
-      setNewNumber('')
-    })
+      setPersons(persons.concat(response.data));
+      setNewName("");
+      setNewNumber("");
+    });
 
     // setPersons([
     //   ...persons,
@@ -88,42 +85,69 @@ const Filter = (props) => {
 
 const PersonForm = (props) => {
   return (
-      <form action={props.handleSubmit}>
-        <div>
-          name: <input onChange={props.handleNameChange} />
-        </div>
-        <div>
-          number: <input onChange={props.handleNumberChange} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+    <form action={props.handleSubmit}>
+      <div>
+        name: <input onChange={props.handleNameChange} />
+      </div>
+      <div>
+        number: <input onChange={props.handleNumberChange} />
+      </div>
+      <div>
+        <button type="submit">add</button>
+      </div>
+    </form>
   );
 };
 
 const Persons = (props) => {
   return (
     <>
-    {props.filter
-      ? props.persons
-          .filter((person) => person.name.toLowerCase().includes(props.filter))
-          .map((person) => {
+      {props.filter
+        ? props.persons
+            .filter((person) =>
+              person.name.toLowerCase().includes(props.filter)
+            )
+            .map((person) => {
+              return (
+                <Person
+                  key={person.name}
+                  name={person.name}
+                  number={person.number}
+                  id={person.id}
+                />
+              );
+            })
+        : props.persons.map((person) => {
             return (
-              <p key={person.name}>
-                {person.name} {person.number}
-              </p>
+              <Person
+                key={person.name}
+                name={person.name}
+                number={person.number}
+                id={person.id}
+              />
             );
-          })
-      : props.persons.map((person) => {
-          return (
-            <p key={person.name}>
-              {person.name} {person.number}
-            </p>
-          );
-        })}
-        </>
-  )
-}
+          })}
+    </>
+  );
+};
+
+const Person = (props) => {
+  const handleDelete = (id, name) => {
+    if (window.confirm(`Delete ${name}?`)) {
+      personService.remove(id);
+    }
+  };
+
+  return (
+    <div style={{ display: "flex" }}>
+      <p>
+        {props.name} {props.number}
+      </p>
+      <button onClick={() => handleDelete(props.id, props.name)} type="button">
+        delete
+      </button>
+    </div>
+  );
+};
 
 export default App;

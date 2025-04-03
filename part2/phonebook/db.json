@@ -1,39 +1,24 @@
 {
   "persons": [
-    {
-      "name": "Arto Hellas",
+    { 
+      "name": "Arto Hellas", 
       "number": "040-123456",
       "id": "1"
     },
-    {
-      "name": "Ada Lovelace",
+    { 
+      "name": "Ada Lovelace", 
       "number": "39-44-5323523",
       "id": "2"
     },
-    {
-      "name": "Dan Abramov",
+    { 
+      "name": "Dan Abramov", 
       "number": "12-43-234345",
       "id": "3"
     },
-    {
-      "name": "Mary Poppendieck",
+    { 
+      "name": "Mary Poppendieck", 
       "number": "39-23-6423122",
       "id": "4"
-    },
-    {
-      "id": 5,
-      "name": "drew english",
-      "number": "630-991-1080"
-    },
-    {
-      "id": 6,
-      "name": "ethan klepitsch",
-      "number": "630-220-8942"
-    },
-    {
-      "id": 7,
-      "name": "matt hamm",
-      "number": "630-740-4236"
     }
   ]
 }
