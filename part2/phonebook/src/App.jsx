@@ -36,7 +36,22 @@ const App = () => {
         (person) => person.name.toLowerCase() === newName.toLowerCase()
       )
     ) {
-      alert(`${newName} is already added to phonebook`);
+      if (
+        window.confirm(
+          `${newName} is already added to the phonebook, replace the old number with a new one?`
+        )
+      ) {
+        personService.getAll().then((response) => {
+          //console.log(response.data)
+          for (const person of response.data) {
+            if (person.name.toLowerCase() === newName.toLowerCase()) {
+              //console.log(person)
+              personService.update(person.id, { ...person, number: newNumber });
+            }
+          }
+        });
+      }
+      //alert(`${newName} is already added to phonebook`);
       return;
     }
 
