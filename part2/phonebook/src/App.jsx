@@ -6,6 +6,7 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
+  const [message, setMessage] = useState(null)
 
   useEffect(() => {
     personService.getAll("http://localhost:3001/persons").then((response) => {
@@ -47,6 +48,10 @@ const App = () => {
             if (person.name.toLowerCase() === newName.toLowerCase()) {
               //console.log(person)
               personService.update(person.id, { ...person, number: newNumber });
+              setMessage({content: `Updated ${newName}`, type: 'success'})
+              setTimeout(() => {
+                setMessage(null)
+              }, 5000)
             }
           }
         });
@@ -63,6 +68,10 @@ const App = () => {
 
     personService.create(personObject).then((response) => {
       console.log(response);
+      setMessage({content: `Added ${newName}`, type: 'success'})
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
       setPersons(persons.concat(response.data));
       setNewName("");
       setNewNumber("");
@@ -77,6 +86,9 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      {message && 
+      <Notification message={message} />
+      }
       <Filter handleFilterChange={handleFilterChange} />
       <h3>Add new</h3>
       <PersonForm
@@ -148,9 +160,18 @@ const Persons = (props) => {
 
 const Person = (props) => {
   const handleDelete = (id, name) => {
-    if (window.confirm(`Delete ${name}?`)) {
-      personService.remove(id);
+    try {
+      if (window.confirm(`Delete ${name}?`)) {
+        personService.remove(id);
+      }
+    } catch (error) {
+      console.log('error caught: ', error)
+      setMessage({content: `Information of ${newName} has already been removed from server`, type: 'error'});
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
     }
+    
   };
 
   return (
@@ -164,5 +185,39 @@ const Person = (props) => {
     </div>
   );
 };
+
+const Notification = (props) => {
+  const onSuccess = {
+    border: '2px solid green',
+    borderRadius: '5px',
+    color: 'green',
+    background: "rgba(0, 255, 0, 0.25)",
+    fontSize: "2rem",
+    height: "50px",
+    display: "flex",
+    alignItems: "center",
+    paddingLeft: 10,
+    marginBottom: 10,
+  }
+
+  const onError = {
+    border: '2px solid red',
+    borderRadius: '5px',
+    color: 'red',
+    background: "rgba(255, 0, 0, 0.25)",
+    fontSize: "2rem",
+    height: "50px",
+    display: "flex",
+    alignItems: "center",
+    paddingLeft: 10,
+    marginBottom: 10,
+  }
+
+  return (
+    <div style={props.message.type == 'success' ? onSuccess : onError}>
+      {props.message.content}
+    </div>
+  )
+}
 
 export default App;
