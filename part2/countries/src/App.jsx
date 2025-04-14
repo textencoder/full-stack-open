@@ -40,11 +40,11 @@ function App() {
         ) : countries.length > 10 && input ? (
           "Too many matches, specify another filter"
         ) : countries.length > 1 && input ? (
-          countries.map((c) => {
-            return <p key={c}>{c}</p>;
+          countries.map((name) => {
+            return <CountryName key={name} name={name} countries={countries} setCountries={setCountries} />;
           })
-        ) : countries.length == 1 ? (
-          <Country name={countries} />
+        ) : countries.length === 1 ? (
+          <CountryInfo name={countries} />
         ) : (
           ""
         )}
@@ -53,7 +53,7 @@ function App() {
   );
 }
 
-function Country(props) {
+function CountryInfo(props) {
   const [capital, setCapital] = useState("");
   const [area, setArea] = useState("");
   const [languages, setLanguages] = useState([]);
@@ -94,6 +94,19 @@ function Country(props) {
       </div>
     </>
   );
+}
+
+function CountryName(props) {
+  const handleClick = () => {
+    props.setCountries([props.name]);
+  }
+
+  return (
+    <div style={{display: "flex"}}>
+    <p>{props.name}</p>
+    <button onClick={handleClick}>Show</button>
+    </div>
+  )
 }
 
 export default App;
