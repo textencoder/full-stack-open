@@ -54,10 +54,13 @@ function App() {
 }
 
 function CountryInfo(props) {
-  const [capital, setCapital] = useState("");
-  const [area, setArea] = useState("");
+  const [capital, setCapital] = useState(null);
+  const [area, setArea] = useState(null);
   const [languages, setLanguages] = useState([]);
   const [flag, setFlag] = useState("");
+  const [temperature, setTemperature] = useState(null);
+  const [conditions, setConditions] = useState(null);
+  const [wind, setWind] = useState(null);
 
   useEffect(() => {
     fetch(`https://studies.cs.helsinki.fi/restcountries/api/name/${props.name}`)
@@ -66,12 +69,29 @@ function CountryInfo(props) {
       })
       .then((data) => {
         console.log(data);
-        setCapital(data.capital);
+        setCapital(String(data.capital));
         setArea(data.area);
         setLanguages(Object.values(data.languages));
         setFlag({ src: data.flags.png, alt: data.flags.alt });
       });
   }, []);
+
+  useEffect(() => {
+    const apiKey = import.meta.env.VITE_API_KEY;
+      console.log("effect ran. capital: ", capital)
+      fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${capital}?unitGroup=us&key=${apiKey}&contentType=json`, { mode: "cors" })
+      .then(response => {
+        return response.json()
+      })
+      .then(data => {
+        console.log(data)
+        setTemperature(data.currentConditions.temp);
+        setConditions(data.currentConditions.conditions)
+        setWind(data.currentConditions.windspeed);
+      })
+  
+    
+  }, [capital])
 
   return (
     <>
@@ -91,6 +111,13 @@ function CountryInfo(props) {
         </ul>
 
         <img src={flag.src} alt={flag.alt} />
+      </div>
+
+      <div>
+        <h2>Weather in {capital}</h2>
+        <p>Temperature: {temperature} degrees Fahrenheit</p>
+        <p>Current Conditions: {conditions}</p>
+        <p>Wind: {wind} mph</p>
       </div>
     </>
   );
