@@ -24,6 +24,8 @@ let persons = [
     }
 ]
 
+app.use(express.json())
+
 app.get('/', (request, response) => {
     response.send("<h1>Hello World!</h1>")
 })
@@ -41,6 +43,25 @@ app.get("/api/persons/:id", (request, response) => {
     } else {
         response.status(404).end()
     }
+})
+
+app.delete("/api/persons/:id", (request, response) => {
+    const id = request.params.id;
+    persons = persons.filter(p => p.id !== id);
+    response.status(204).end()
+})
+
+app.post("/api/persons", (request, response) => {
+    const maxId = persons.length > 0
+    ? Math.max(...persons.map(p => Number(p.id)))
+    : 0;
+
+    const person = request.body;
+    person.id = String(maxId + 1);
+    console.log(request.headers)
+    console.log(person);
+    persons = persons.concat(person)
+    response.json(person)
 })
 
 app.get("/info", (request, response) => {
