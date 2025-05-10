@@ -40,14 +40,16 @@ app.get('/', (request, response) => {
     response.send("<h1>Hello World!</h1>")
 })
 
-app.get("/api/persons", (request, response) => {
-    Person.find({}).then(persons => {
+app.get("/api/persons", (request, response, next) => {
+    Person.find({})
+    .then(persons => {
         response.json(persons)
     })
+    .catch(error => next(error))
     
 })
 
-app.get("/api/persons/:id", (request, response) => {
+app.get("/api/persons/:id", (request, response, next) => {
     /*
     const id = request.params.id;
     const person = persons.find(p => p.id === id);
@@ -58,9 +60,11 @@ app.get("/api/persons/:id", (request, response) => {
         response.status(404).end()
     }
         */
-       Person.findById(request.params.id).then(note => {
-        response.json(note)
+       Person.findById(request.params.id)
+       .then(person => {
+        response.json(person)
        })
+       .catch(error => next(error))
 })
 
 app.delete("/api/persons/:id", (request, response) => {
