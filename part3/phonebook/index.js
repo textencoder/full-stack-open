@@ -3,7 +3,7 @@ const express = require("express");
 const app = express();
 const morgan = require("morgan");
 const Person = require("./models/person")
-
+/*
 let persons = [
     { 
       "id": "1",
@@ -26,7 +26,7 @@ let persons = [
       "number": "39-23-6423122"
     }
 ]
-
+*/
 app.use(express.static('dist'))
 
 morgan.token('body', function (req, res) { return JSON.stringify(req.body) })
@@ -48,6 +48,7 @@ app.get("/api/persons", (request, response) => {
 })
 
 app.get("/api/persons/:id", (request, response) => {
+    /*
     const id = request.params.id;
     const person = persons.find(p => p.id === id);
 
@@ -56,6 +57,10 @@ app.get("/api/persons/:id", (request, response) => {
     } else {
         response.status(404).end()
     }
+        */
+       Person.findById(request.params.id).then(note => {
+        response.json(note)
+       })
 })
 
 app.delete("/api/persons/:id", (request, response) => {
@@ -83,23 +88,26 @@ app.post("/api/persons", (request, response) => {
         return response.status(400).json({
             error: "number missing"
         })
-    } else if (persons.find(p => p.name === body.name)) {
+    } else if (Person.find(p => p.name === body.name)) {
         return response.status(400).json({
             error: 'name must be unique'
         })
     }
 
-    person = {
+    const person = new Person({
         name: body.name,
         number: body.number,
         id: generateId()
-    }
+    })
 
     console.log(request.headers)
     console.log(person);
 
-    persons = persons.concat(person)
-    response.json(person)
+    //persons = persons.concat(person)
+    //response.json(person)
+    person.save().then(savedPerson => {
+        response.json(savedPerson)
+    })
 })
 
 app.get("/info", (request, response) => {
