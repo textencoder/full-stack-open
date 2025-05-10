@@ -65,17 +65,17 @@ app.get("/api/persons/:id", (request, response) => {
 
 app.delete("/api/persons/:id", (request, response) => {
     const id = request.params.id;
-    persons = persons.filter(p => p.id !== id);
+    //persons = persons.filter(p => p.id !== id);
     response.status(204).end()
 })
-
+/*
 const generateId = () => {
     const maxId = persons.length > 0
     ? Math.max(...persons.map(p => Number(p.id)))
     : 0;
     return String(maxId + 1)
 }
-
+*/
 app.post("/api/persons", (request, response) => {
     
     const body = request.body;
@@ -96,8 +96,7 @@ app.post("/api/persons", (request, response) => {
 
     const person = new Person({
         name: body.name,
-        number: body.number,
-        id: generateId()
+        number: body.number
     })
 
     console.log(request.headers)
@@ -112,7 +111,7 @@ app.post("/api/persons", (request, response) => {
 
 app.get("/info", (request, response) => {
     response.send(`
-        <p>Phonebook has info for ${persons.length} people</p>
+        <p>Phonebook has info for ${null} people</p>
         <p>${new Date()}</p>
         `)
 })
