@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
-
+/*
 if (process.argv.length < 3) {
   console.log("give password as argument");
   process.exit(1);
 }
-
-const password = process.argv[2];
+*/
+//const password = process.argv[2];
 
 const url = process.env.MONGODB_URI
 
@@ -34,7 +34,7 @@ personSchema.set('toJSON', {
 })
 
 //const Person = mongoose.model("Person", personSchema);
-
+/*
 if (process.argv.length == 3) {
   console.log("phonebook:");
   Person.find({}).then((result) => {
@@ -56,5 +56,5 @@ if (process.argv.length == 3) {
   console.log("error occurred.");
   process.exit(1);
 }
-
+*/
 module.exports = mongoose.model('Person', personSchema)
