@@ -13,7 +13,7 @@ const App = () => {
       //console.log(response.data)
       setPersons(response.data);
     });
-  }, [persons]);
+  }, []);
 
   function handleNameChange(event) {
     //console.log(event.target.value)
